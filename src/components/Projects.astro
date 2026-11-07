@@ -4,67 +4,75 @@ import Badge from "@/components/Badge.astro";
 import LinkButton from "@/components/LinkButton.astro";
 import Code from "@/components/icons/Code.astro";
 import ExternalLink from "@/components/icons/ExternalLink.astro";
-import AstroIcon from "@/components/icons/AstroIcon.astro";
-import TailwindIcon from "@/components/icons/TailwindIcon.astro";
-import TypeScriptIcon from "@/components/icons/TypeScriptIcon.astro";
-import VSCodeIcon from "@/components/icons/VSCodeIcon.astro";
-import JSONIcon from "@/components/icons/JSONIcon.astro";
 
-import { projects } from "@/data/projects";
-
-const stackIcons: Record<string, typeof AstroIcon> = {
-  Astro: AstroIcon,
-  "Tailwind CSS": TailwindIcon,
-  TypeScript: TypeScriptIcon,
-  "VS Code": VSCodeIcon,
-  JSON: JSONIcon,
-};
+const projects = [
+  {
+    id: "la-casa-informatica",
+    name: "La Casa Informática",
+    description:
+      'Creé la página web para la academia de programación "La Casa Informática". Este proyecto buscaba informar y atraer a nuevos estudiantes.',
+    stack: ["Astro", "Tailwind CSS", "TypeScript"],
+    links: [
+      { text: "Repositorio", href: "https://github.com/withoutnicks/landing-la-casa-informatica" },
+      { text: "Ver Sitio", href: "https://lacasainformatica.com/" },
+    ],
+    bannerUrl: "/poster/web.svg",
+  },
+  {
+    id: "extension-for-vsc",
+    name: "Extensión para VSC",
+    description:
+      "Colección de snippets para React, TypeScript y JavaScript que busca impulsar tu productividad en desarrollo web con atajos modernos.",
+    stack: ["VS Code", "JSON"],
+    links: [
+      { text: "Repositorio", href: "https://github.com/withoutnicks/react-and-js-snippets" },
+      { text: "Ver Sitio", href: "https://react-and-js-snippets.vercel.app/" },
+    ],
+    bannerUrl: "/poster/speed.svg",
+  },
+];
 ---
 
-<section id="proyectos" class="border-b border-zinc-800 py-12">
+<section id="proyectos" class="border-b border-stone-800 py-12">
   <SubtitleSection title="Proyectos" />
 
-  <div class="mt-6 grid gap-4 md:grid-cols-2">
+  <div class="mt-6 flex flex-col gap-8">
     {
       projects.map((project) => (
-        <article class="card flex flex-col gap-3">
+        <article class="grid gap-5 sm:grid-cols-[10rem_minmax(0,1fr)] sm:items-start">
           {project.bannerUrl && (
             <img
               src={project.bannerUrl}
-              alt={`${project.name} preview`}
-              class="h-36 w-full rounded-md object-cover object-[25%_25%]"
+              alt={`Ilustración del proyecto ${project.name}`}
+              width="512"
+              height="512"
+              class="h-40 w-full rounded-sm border border-stone-800 object-cover object-[25%_25%]"
               loading="lazy"
             />
           )}
 
-          <h3 class="text-lg font-semibold text-white">{project.name}</h3>
+          <div class="min-w-0">
+            <h3 class="text-lg font-semibold text-stone-100">{project.name}</h3>
 
-          <div class="flex flex-wrap gap-2">
-            {project.stack.map((tech) => {
-              const Icon = stackIcons[tech];
-              return (
-                <Badge>
-                  {Icon && <Icon />}
-                  {tech}
-                </Badge>
-              );
-            })}
-          </div>
+            <p class="mt-2 max-w-[60ch] text-sm leading-relaxed text-stone-400">
+              {project.description}
+            </p>
 
-          <p class="text-sm leading-relaxed text-zinc-400">
-            {project.description}
-          </p>
+            <div class="mt-3 flex flex-wrap gap-2">
+              {project.stack.map((tech) => <Badge>{tech}</Badge>)}
+            </div>
 
-          <div class="mt-auto flex flex-wrap gap-2 pt-1">
-            {project.links.map((link) => {
-              const isRepo = link.text === "Repositorio";
-              return (
-                <LinkButton href={link.href}>
-                  {isRepo ? <Code /> : <ExternalLink />}
-                  {link.text}
-                </LinkButton>
-              );
-            })}
+            <div class="mt-4 flex flex-wrap gap-2">
+              {project.links.map((link) => {
+                const isRepo = link.text === "Repositorio";
+                return (
+                  <LinkButton href={link.href}>
+                    {isRepo ? <Code /> : <ExternalLink />}
+                    {link.text}
+                  </LinkButton>
+                );
+              })}
+            </div>
           </div>
         </article>
       ))

@@ -2,36 +2,54 @@
 import SubtitleSection from "@/components/SubtitleSection.astro";
 import Badge from "@/components/Badge.astro";
 import AstroIcon from "@/components/icons/AstroIcon.astro";
+import CSSIcon from "@/components/icons/CSSIcon.astro";
+import NestJSIcon from "@/components/icons/NestJSIcon.astro";
+import NextJSIcon from "@/components/icons/NextJSIcon.astro";
+import PostgreSQLIcon from "@/components/icons/PostgreSQLIcon.astro";
+import SQLiteIcon from "@/components/icons/SQLiteIcon.astro";
+import SupabaseIcon from "@/components/icons/SupabaseIcon.astro";
 import TypeScriptIcon from "@/components/icons/TypeScriptIcon.astro";
 
 const skillIcons: Record<string, typeof AstroIcon> = {
   Astro: AstroIcon,
+  CSS: CSSIcon,
+  NestJS: NestJSIcon,
+  "Next.js": NextJSIcon,
+  PostgreSQL: PostgreSQLIcon,
+  SQLite: SQLiteIcon,
+  Supabase: SupabaseIcon,
   TypeScript: TypeScriptIcon,
 };
 
 const skills = [
   {
     label: "Lenguajes",
-    items: ["TypeScript", "CSS", "SQL", "HTML"],
+    items: ["TypeScript", "CSS", "PostgreSQL", "SQLite"],
   },
   {
     label: "Frameworks",
-    items: ["Astro", "Angular", "NestJS"],
+    items: ["Astro", "NestJS", "Next.js", "Supabase"],
   },
 ];
 ---
 
-<section id="habilidades" class="border-b border-zinc-800 py-12">
+<section id="habilidades" class="border-b border-stone-800 py-12">
   <SubtitleSection title="Habilidades" />
 
-  <dl class="mt-6 flex flex-col gap-4">
+  <dl class="mt-6 flex flex-col gap-5">
     {
       skills.map((group) => (
-        <div class="grid grid-cols-[9rem_1fr] items-start gap-3">
-          <dt class="pt-0.5 text-sm text-zinc-500">{group.label}</dt>
+        <div class="grid gap-1 sm:grid-cols-[9rem_1fr] sm:items-start sm:gap-3">
+          <dt class="text-sm font-medium text-stone-300">{group.label}</dt>
           <dd class="flex flex-wrap gap-2">
             {group.items.map((skill) => {
-              return <Badge>{skill}</Badge>;
+              const Icon = skillIcons[skill];
+              return (
+                <Badge>
+                  {Icon && <Icon />}
+                  {skill}
+                </Badge>
+              );
             })}
           </dd>
         </div>
