@@ -6,46 +6,35 @@ import "@fontsource-variable/space-grotesk";
 
 interface Props {
   title: string;
+  description?: string;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = "Portafolio de Gerardo Caycho Artiaga, Web & Apps Developer en Lima, Perú. Información personal, proyectos y habilidades técnicas.",
+} = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      name="description"
-      content="I am a frontend web developer, this is my web portfolio where I show my information and projects. I am from Peru"
-    />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title}</title>
 
     <meta name="robots" content="index, follow" />
-    <meta property="og:title" content="Portfolio Web Frontend - Gerardo" />
-    <meta
-      property="og:description"
-      content="I am a frontend web developer, this is my web portfolio where I show my information and projects. I am from Peru"
-    />
-    <meta
-      property="og:image"
-      content="https://raw.githubusercontent.com/withoutnicks/my-portfolio-web/refs/heads/main/public/preview.webp"
-    />
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Portfolio Web Frontend - Gerardo" />
-    <meta
-      name="twitter:description"
-      content="This is my web portfolio where I show my information and projects"
-    />
-    <meta
-      name="twitter:image"
-      content="https://raw.githubusercontent.com/withoutnicks/my-portfolio-web/refs/heads/main/public/preview.webp"
-    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="es_PE" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
   </head>
-  <body class="bg-black text-zinc-300">
+  <body class="bg-stone-950 text-stone-200">
     <div class="mx-auto w-full max-w-3xl px-6">
       <Header />
       <main>
