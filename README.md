@@ -1,138 +1,71 @@
-# 🚀 Portfolio Web - Gerardo Caycho
+# Portfolio Web — Gerardo Caycho
 
-## 🚀 Instalación y Uso
+Portafolio personal construido con **Astro 5** y **Tailwind CSS 3**. Página única, estática, en español, con tema oscuro (paleta `stone` + acento rojo) y tipografía **Space Grotesk**.
+
+## 🚀 Instalación y uso
 
 ### Prerrequisitos
 
-- Node.js (versión 18 o superior)
-- pnpm (recomendado) o npm
+- Node.js 18 o superior
+- pnpm (gestor de paquetes del proyecto; `pnpm-lock.yaml`)
 
-### Pasos de instalación
+### Pasos
 
 ```bash
-# Clone repository
-git clone https://github.com/tu-usuario/my-portfolio-web.git
+git clone git@github.com:withoutnicks/my-portfolio-web.git
 cd my-portfolio-web
 
-# Install dependencies
 pnpm install
-
-# Execute project
 pnpm dev
 ```
 
 ### Scripts disponibles
 
-| Comando        | Descripción                                          |
-| -------------- | ---------------------------------------------------- |
-| `pnpm dev`     | Inicia el servidor de desarrollo en `localhost:4321` |
-| `pnpm build`   | Construye la aplicación para producción              |
-| `pnpm preview` | Previsualiza la build de producción                  |
-| `pnpm astro`   | Ejecuta comandos de la CLI de Astro                  |
+| Comando        | Descripción                                                            |
+| -------------- | ---------------------------------------------------------------------- |
+| `pnpm dev`     | Servidor de desarrollo en `localhost:4321`                             |
+| `pnpm build`   | Type check (`astro check`) + build de producción (`astro build`)       |
+| `pnpm preview` | Previsualiza el build de producción                                    |
+| `pnpm astro`   | CLI de Astro (comandos arbitrarios)                                    |
 
 ---
 
-## 🧱 Arquitectura y Convenciones
-
-Esta base usa Astro con React y Tailwind. Para escalar cómodamente (y preparar la migración a Astro 5 y Tailwind 4), se adoptan alias y una estructura por dominios.
-
-### Estructura de carpetas propuesta
+## 🧱 Estructura
 
 ```
 src/
-  components/
-    astro/           # Componentes Astro atómicos (UI puros, sin lógica de negocio)
-    react/           # Componentes React (interactividad, client:* directives)
-    ui/              # Primitivas de UI reutilizables (botones, badges, etc.)
-    icons/           # Íconos
-    (feature-*/)**   # Opcional: agrupar por feature si crece el proyecto
-  layouts/           # Layouts
-  pages/             # Rutas
-  styles/            # CSS global, tokens y utilidades de estilos
-  lib/               # Utilidades puras, helpers, constantes
+  components/        # Secciones y componentes de la página
+    AstroIcon.astro, Badge.astro, Button.astro, Contact.astro,
+    About.astro, Footer.astro, Header.astro, Hero.astro,
+    LinkButton.astro, Projects.astro, Skills.astro, Studies.astro,
+    SubtitleSection.astro
+    icons/           # Íconos SVG inline (acción + tecnologías), en Astro
+  layouts/
+    Layout.astro     # Chrome de la página: Header/Footer, globals.css,
+                     # fuente Space Grotesk, meta/OG
+  pages/
+    index.astro      # Ruta única
+  styles/
+    globals.css      # Directivas @tailwind + clases @layer components
+public/
+  cv_gcaycho.pdf, favicon.svg, profile.webp, poster/  # Assets estáticos
 ```
 
-Mantén `public/` para assets estáticos (imágenes, fuentes, favicon, etc.).
-
-### Aliases de importación
-
-Definidos en `tsconfig.json`:
-
-- `@/*` → `src/*`
-- `@components/*` → `src/components/*`
-- `@layouts/*` → `src/layouts/*`
-- `@pages/*` → `src/pages/*`
-- `@styles/*` → `src/styles/*`
-- `@lib/*` → `src/lib/*`
-- `@ui/*` → `src/components/ui/*`
-- `@icons/*` → `src/components/icons/*`
-- `@astro/*` → `src/components/astro/*`
-- `@react/*` → `src/components/react/*`
-
-Ejemplo en `src/pages/index.astro`:
-
-```astro
 ---
-import Layout from "@layouts/Layout.astro";
-import Meteors from "@atoms/meteors";
-import Header from "@components/HeaderComponent.astro";
----
-```
 
-### Convenciones de nombres
+## 📐 Convenciones
 
-- Componentes Astro: `PascalCase` y sufijo opcional `.astro` (p.ej. `Header.astro`).
-- Componentes React: `PascalCase.tsx` (p.ej. `ModeToggle.tsx`).
-- Primitivas UI: nombres semánticos y neutrales (`Button.tsx`, `Badge.tsx`).
-- Archivos utilitarios en `lib/`: `kebab-case` (`utils.ts`, `format-date.ts`).
-- Evita nombres con sufijos largos como `Component`; prefiere `Header.astro` en lugar de `HeaderComponent.astro`. La migración puede hacerse en dos fases (ver plan abajo).
+- **Una ruta**: `src/pages/index.astro` compone `Layout` + secciones Hero, About, Projects, Studies, Skills, Contact.
+- **Secciones con `id`** (`#sobre-mi`, `#proyectos`, `#educacion`, `#habilidades`, `#contacto`): enlazan con la navegación del Header.
+- **Datos de proyectos**: array declarado en el frontmatter de `Projects.astro` (`name`, `description`, `stack: string[]`, `links: {text, href}[]`, `bannerUrl`).
+- **Cliente**: un solo script (`<script>` de Astro, bundled) en `Hero.astro` para copiar el email al portapapeles. Sin React ni hidratación.
+- **Estilos**: la configuración base de Tailwind viene de `@astrojs/tailwind` con `applyBaseStyles: false`; las directivas `@tailwind` viven en `globals.css`.
+- **Clases de componente** en `globals.css` (`@layer components`): `.link`, `.btn`, `.btn-primary`, `.badge`.
+- **Tema oscuro fijo** (`bg-stone-950`): el sitio no alterna temas, por lo que las variantes `dark:` no se usan.
+- **Tipografía**: Space Grotesk única (`font-sans`), importada en `Layout.astro` vía `@fontsource-variable/space-grotesk`.
 
-## 🔄 Plan de migración de nombres de componentes (seguro, sin romper)
+## 📄 Contenido y assets
 
-Fase 1 (no disruptiva):
-
-1. Mantener archivos actuales y crear re-exportaciones con nombres nuevos si aplica.
-2. Actualizar imports gradualmente a los nuevos nombres y/o rutas con alias.
-
-Fase 2 (limpieza):
-
-1. Renombrar archivos físicos (`HeaderComponent.astro` → `Header.astro`).
-2. Ejecutar búsqueda y reemplazo de imports restantes.
-3. Eliminar re-exportaciones temporales.
-
-Sugerencias de renombre:
-
-- `HeaderComponent.astro` → `Header.astro`
-- `HeroComponent.astro` → `Hero.astro`
-- `ProjectsComponent.astro` → `Projects.astro`
-- `StudiesComponent.astro` → `Studies.astro`
-- `SkillsComponent.astro` → `Skills.astro`
-- `AboutComponent.astro` → `About.astro`
-- `FooterComponent.astro` → `Footer.astro`
-
-## ⬆️ Plan para Astro 5 y Tailwind CSS 4
-
-Astro 5:
-
-- Revisa breaking changes en la guía oficial. Ajusta integraciones si cambian (`@astrojs/react`, `@astrojs/tailwind`).
-- Ejecuta `pnpm update astro @astrojs/react @astrojs/tailwind` y corrige advertencias.
-- Valida `client:*` directives y props de componentes React/Islas.
-
-Tailwind 4:
-
-- Actualiza a `tailwindcss@^4` y revisa cambios de configuración (nuevo preset, posibles cambios en `content`, tokens y `@tailwind base/components/utilities`).
-- Si se utiliza `tailwind-merge` o `tailwindcss-animate`, verifica compatibilidad de versiones.
-- Revisa clases personalizadas y utilidades que pudieran cambiar en TW4.
-
-Checklist sugerida:
-
-1. Actualizar dependencias: `astro`, `@astrojs/*`, `tailwindcss`, plugins.
-2. Revisar `tailwind.config.mjs` y `globals.css` (tokens, baseStyles, dark mode).
-3. Ejecutar `pnpm build` y corregir warnings/errores.
-4. Validar rutas e imports con alias nuevos.
-
-## 📄 Licencia
-
-Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más detalles.
-
----
+- El texto de la interfaz está en español (`<html lang="es">`).
+- Los estáticos viven en `public/` y se referencian rutas raíz: `/profile.webp`, `/cv_gcaycho.pdf`, `/poster/*.svg`.
+- Sin formulario de contacto: la sección Contacto lista solo GitHub y LinkedIn; el email se copia desde el Hero.
